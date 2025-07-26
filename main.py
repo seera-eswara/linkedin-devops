@@ -31,8 +31,15 @@ def extract_posts():
         browser.close()
         return results
 
+def clean_post(post):
+    # Remove all hashtags and trim long content
+    post = re.sub(r"#\S+", "", post)
+    return post.strip()[:600]
+
 def main():
     posts = extract_posts()
+    posts = [clean_post(p) for p in posts]
+    content = "\n\n---\n\n".join(posts)
     if posts:
         content = "\n\n---\n\n".join(posts)
         send_email("📣 DevOps Posts from LinkedIn Feed", content)
